@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ch8.HighOrderFuncTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2019-07-08T12:37:48" hostname="jeongwoo-iMac.local" time="0.006">
+  <properties/>
+  <testcase name="고차함수 SUM" classname="ch8.HighOrderFuncTest" time="0.003"/>
+  <testcase name="고차함수 Action" classname="ch8.HighOrderFuncTest" time="0.002"/>
+  <system-out><![CDATA[42
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
