@@ -1,5 +1,7 @@
 package ch8
 
+import java.util.concurrent.locks.Lock
+
 val sum = { x: Int, y: Int -> x + y }
 val action = { println(42) }
 
@@ -95,3 +97,28 @@ fun List<SiteVisit>.averageDurationFor(predicate: (SiteVisit) -> Boolean) =
 fun List<SiteVisit>.averageDurationFor(os: OS) = filter { it.os == os }
     .map(SiteVisit::duration)
     .average()
+
+inline fun <T> synchronized(lock: Lock, action: () -> T): T {
+    lock.lock()
+    try {
+        return action()
+    } finally {
+        lock.unlock()
+    }
+}
+
+fun foo(l: Lock) {
+    println("Before sync")
+
+    synchronized(l) {
+        println("Action")
+    }
+
+    println("After sync")
+}
+
+class LockOwner(val lock: Lock) {
+    fun runUnderLock(body: () -> Unit) {
+        synchronized(lock, body) // body 는 inline 되지 않는다.
+    }
+}

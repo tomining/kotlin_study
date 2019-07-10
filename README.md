@@ -187,3 +187,48 @@ fun List<SiteVisit>.averageDurationFor(predicate: (SiteVisit) -> Boolean) =
 
 ## 8.2 인라인 함수: 람다의 부가 비용 없애기
 
+> 보통 람다를 무명 클래스로 컴파일
+> inline 을 통해 무명 클래스가 아닌 바이트코드로 대체할 수 있다.
+
+### 8.2.1 인라이닝이 작동하는 방식
+
+> inline 으로 선언된 함수는 본문이 인라인이 된다.
+> -> 함수를 호출하는 코드를 함수를 호출하는 바이트코드 대신에 함수 본문을 번역한 바이트코드로 컴파일한다.
+
+```kotlin
+inline fun <T> synchronized(lock: Lock, action: () -> T): T {
+    lock.lock()
+    try {
+        return action()
+    } finally {
+        lock.unlock()
+    }
+}
+```
+
+https://javap.yawk.at/#ZUnbc8
+P.366 ~ P.367 참고
+```kotlin
+// 람다로...
+fun foo(l: Lock) {
+    println("Before sync")
+
+    synchronized(l) {
+        println("Action")
+    }
+
+    println("After sync")
+}
+
+// 함수 타입으로...
+class LockOwner(val lock: Lock) {
+    fun runUnderLock(body: () -> Unit) {
+        synchronized(lock, body)
+    }
+}
+```
+
+inline 되는 영역에 차이가 있다.
+
+### 8.2.2 인라인 함수의 한계
+
