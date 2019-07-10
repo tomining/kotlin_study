@@ -60,4 +60,30 @@ class HighOrderFuncTest {
         println(log.averageDurationFor { it.os in setOf(OS.ANDROID, OS.IOS) })
         println(log.averageDurationFor { it.os === OS.IOS && it.path == "/signup" })
     }
+
+    @Test
+    fun `컬렉션 연산 인라이닝`() {
+        println(people.filter { it.age < 30 })
+
+        val result = mutableListOf<Person>()
+        for (person in people) {
+            if (person.age < 30) result.add(person)
+        }
+        println(result)
+    }
+
+    @Test
+    fun `람다로부터 반환`() {
+        lookForAlice(people)
+        lookForAlice2(people)
+        lookForAlice3(people)
+        lookForAlice4(people)
+        lookForAlice5(people)
+
+        people.filter(fun(person): Boolean {
+            return person.age < 30
+        })
+
+        people.filter(fun(person) = person.age < 30)
+    }
 }

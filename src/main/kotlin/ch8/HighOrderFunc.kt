@@ -1,5 +1,7 @@
 package ch8
 
+import java.io.BufferedReader
+import java.io.FileReader
 import java.util.concurrent.locks.Lock
 
 val sum = { x: Int, y: Int -> x + y }
@@ -121,4 +123,66 @@ class LockOwner(val lock: Lock) {
     fun runUnderLock(body: () -> Unit) {
         synchronized(lock, body) // body 는 inline 되지 않는다.
     }
+}
+
+//fun <T, R> Sequence<T>.map(transform: (T) -> R): Sequence<R> {
+//    return TransformingSequence(this, transform)
+//}
+
+data class Person(val name: String, val age: Int)
+
+val people = listOf(Person("Alice", 29), Person("Bob", 30))
+
+fun readFirstLineFromFile(path: String): String {
+    BufferedReader(FileReader(path)).use { br ->
+        return br.readLine() // non-local
+    }
+}
+
+fun lookForAlice(people: List<Person>) {
+    for (person in people) {
+        if (person.name == "Alice") {
+            println("Found!")
+            return
+        }
+    }
+
+    println("Alice is not found")
+}
+
+// inline function return
+fun lookForAlice2(people: List<Person>) {
+    people.forEach {
+        if (it.name == "Alice") {
+            println("Found!")
+            return
+        }
+    }
+
+    println("Alice is not found")
+}
+
+// lable return
+fun lookForAlice3(people: List<Person>) {
+    people.forEach lable@{
+        if (it.name == "Alice") return@lable
+    }
+
+    println("Alice must be somewhere")
+}
+
+fun lookForAlice4(people: List<Person>) {
+    people.forEach {
+        if (it.name == "Alice") return@forEach
+    }
+
+    println("Alice must be somewhere")
+}
+
+// 무명 함수
+fun lookForAlice5(people: List<Person>) {
+    people.forEach(fun(person) {
+        if (person.name == "Alice") return
+        println("${person.name} is not Alice")
+    })
 }

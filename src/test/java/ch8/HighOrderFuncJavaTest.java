@@ -5,6 +5,9 @@ import kotlin.collections.CollectionsKt;
 import kotlin.jvm.functions.Function1;
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,5 +38,11 @@ public class HighOrderFuncJavaTest {
             System.out.println(s);
             return Unit.INSTANCE;
         });
+    }
+
+    static String readFirstLineFromFile(String path) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            return br.readLine();
+        }
     }
 }
